@@ -400,6 +400,7 @@
 
         <!-- Remove / Reset -->
         <div class="controls-section">
+            <button class="btn-success" onclick="addCounters()">+1/+1 to all</button>
             <button class="btn-danger" onclick="removeAll()">Remove All</button>
             <button class="btn-danger" onclick="resetAll()">Reset</button>
         </div>
@@ -636,7 +637,24 @@
             }
         }
 
+        function addCounters() {
+            if (!confirm("Are you sure you want to give every creature +1/+1?")) return;
+            let modified = false;
 
+            Object.keys(values).forEach(k => {
+                const creature = values[k];
+                if (typeof creature === 'object' && creature !== null) {
+                    creature.power = (creature.power ?? 1) + 1;
+                    creature.toughness = (creature.toughness ?? 1) + 1;
+                    modified = true;
+                }
+            });
+
+            if (modified) {
+                save();
+                render();
+            }
+        }
 
 
         function updateCreatureSummary() {
