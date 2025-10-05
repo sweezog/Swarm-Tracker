@@ -4,282 +4,286 @@
 <head>
     <meta charset="UTF-8" />
     <title>Swarm Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
+            font-size: 18px;
+            /* increases overall scale */
             font-family: system-ui, sans-serif;
             padding: 1em;
             background: #f5f5f5;
             display: flex;
             flex-direction: column;
             align-items: center;
-        }
 
-        h1 {
-            text-align: center;
-        }
-
-        button {
-            margin-left: .5em;
-            padding: 0.6em 1em;
-            border: none;
-            border-radius: 8px;
-            background: #ddd;
-            cursor: pointer;
-            font-size: 1em;
-            transition: background 0.2s;
-        }
-
-        button:hover {
-            background: #ccc;
-        }
-
-        .btn-danger {
-            background: #e74c3c;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #c0392b;
-        }
-
-        .btn-success {
-            background: #27ae60;
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: #1e874b;
-        }
-
-        .controls {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            gap: 0.6em;
-            background: #fff;
-            padding: 0.8em;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-            margin-bottom: 1em;
-            max-width: 600px;
-            width: 100%;
-        }
-
-        .controls-section {
-            display: flex;
-            align-items: center;
-            gap: 0.5em;
-            flex-wrap: wrap;
-        }
-
-        label {
-            margin: 0 .3em;
-        }
-
-        .divider {
-            width: 2px;
-            height: 36px;
-            background: #ccc;
-        }
-
-        .trigger {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #fff;
-            padding: .5em 1em;
-            margin: .3em 0;
-            border-radius: 8px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 500px;
-        }
-
-        .counter {
-            display: flex;
-            align-items: center;
-            gap: .5em;
-        }
-
-        .counter button {
-            width: 2.5em;
-            height: 2.5em;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-top: 1em;
-            margin-bottom: .5em;
-            font-weight: bold;
-        }
-
-        input[type="number"] {
-            width: 5.5em;
-            text-align: center;
-            padding: .5em;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            font-size: 1em;
-        }
-
-        /* Grid layout for creatures */
-        #list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 0.6em;
-            width: 100%;
-            max-width: 500px;
-        }
-
-        .item {
-            background: #fff;
-            padding: .6em;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .item.scute strong {
-            color: #2ecc71;
-        }
-
-        .item button {
-            margin-top: .25em;
-            font-size: 0.95em;
-        }
-
-        .creature-stat {
-            font-size: 1em;
-            color: #444;
-        }
-
-        .land-counter {
-            display: flex;
-            align-items: center;
-            gap: 0.3em;
-        }
-
-        .land-value {
-            font-weight: bold;
-            min-width: 2em;
-            text-align: center;
-            font-size: 1.1em;
-        }
-
-        /* Popup styling */
-        .popup {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(46, 204, 113, 0.95);
-            color: white;
-            padding: 0.7em 1.2em;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-            font-weight: bold;
-            opacity: 1;
-            transition: opacity 0.5s ease-out;
-            z-index: 1000;
-        }
-
-        /* 🌐 Mobile Zoomed-In Layout */
-        @media (max-width: 700px) {
-
-            html,
-            body {
-                font-size: 20px;
-                /* Scale everything up globally */
+            @media (max-width: 700px) {
+                html {
+                    font-size: 20px;
+                    /* bigger default scale for phones */
+                }
             }
 
             h1 {
-                font-size: 1.6em;
-            }
-
-            .controls {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 1em;
-                max-width: 90%;
-                /* narrower for thumb reach */
-                padding: 1em;
-            }
-
-            .controls-section {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 0.6em;
-            }
-
-            .divider {
-                display: none;
+                text-align: center;
             }
 
             button {
-                width: 100%;
-                font-size: 1.1em;
-                padding: 0.9em;
+                margin-left: .5em;
+                padding: 0.6em 1em;
+                border: none;
+                border-radius: 8px;
+                background: #ddd;
+                cursor: pointer;
+                font-size: 1em;
+                transition: background 0.2s;
             }
 
-            .btn-success,
+            button:hover {
+                background: #ccc;
+            }
+
             .btn-danger {
-                font-size: 1.2em;
+                background: #e74c3c;
+                color: white;
             }
 
-            input[type="number"] {
-                font-size: 1.1em;
-                padding: 0.6em;
+            .btn-danger:hover {
+                background: #c0392b;
+            }
+
+            .btn-success {
+                background: #27ae60;
+                color: white;
+            }
+
+            .btn-success:hover {
+                background: #1e874b;
+            }
+
+            .controls {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: center;
+                gap: 0.6em;
+                background: #fff;
+                padding: 0.8em;
+                border-radius: 12px;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+                margin-bottom: 1em;
+                max-width: 600px;
                 width: 100%;
+            }
+
+            .controls-section {
+                display: flex;
+                align-items: center;
+                gap: 0.5em;
+                flex-wrap: wrap;
             }
 
             label {
-                font-size: 1.1em;
+                margin: 0 .3em;
+            }
+
+            .divider {
+                width: 2px;
+                height: 36px;
+                background: #ccc;
             }
 
             .trigger {
-                font-size: 1.1em;
-                padding: 0.8em 1em;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                background: #fff;
+                padding: .5em 1em;
+                margin: .3em 0;
+                border-radius: 8px;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+                width: 100%;
+                max-width: 500px;
+            }
+
+            .counter {
+                display: flex;
+                align-items: center;
+                gap: .5em;
             }
 
             .counter button {
-                width: 2.8em;
-                height: 2.8em;
-                font-size: 1.1em;
+                width: 2.5em;
+                height: 2.5em;
             }
 
-            .creature-stat {
-                font-size: 1.1em;
+            .section-title {
+                text-align: center;
+                margin-top: 1em;
+                margin-bottom: .5em;
+                font-weight: bold;
             }
 
+            input[type="number"] {
+                width: 5.5em;
+                text-align: center;
+                padding: .5em;
+                border-radius: 8px;
+                border: 1px solid #ccc;
+                font-size: 1em;
+            }
+
+            /* Grid layout for creatures */
             #list {
-                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-                gap: 0.7em;
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 0.6em;
+                width: 100%;
+                max-width: 500px;
             }
 
             .item {
-                padding: 0.8em;
+                background: #fff;
+                padding: .6em;
+                border-radius: 10px;
+                text-align: center;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
             }
 
-            .land-counter button {
-                width: 3em;
-                height: 3em;
-                font-size: 1.1em;
+            .item.scute strong {
+                color: #2ecc71;
+            }
+
+            .item button {
+                margin-top: .25em;
+                font-size: 0.95em;
+            }
+
+            .creature-stat {
+                font-size: 1em;
+                color: #444;
+            }
+
+            .land-counter {
+                display: flex;
+                align-items: center;
+                gap: 0.3em;
             }
 
             .land-value {
-                font-size: 1.2em;
+                font-weight: bold;
+                min-width: 2em;
+                text-align: center;
+                font-size: 1.1em;
             }
 
+            /* Popup styling */
             .popup {
-                font-size: 1.1em;
-                padding: 0.8em 1.4em;
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(46, 204, 113, 0.95);
+                color: white;
+                padding: 0.7em 1.2em;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+                font-weight: bold;
+                opacity: 1;
+                transition: opacity 0.5s ease-out;
+                z-index: 1000;
             }
-        }
+
+            /* 🌐 Simplified mobile layout — no over-scaling */
+            @media (max-width: 700px) {
+
+                html,
+                body {
+                    font-size: 14px;
+                    /* baseline text size */
+                }
+
+                h1 {
+                    font-size: 1.2em;
+                }
+
+                .controls {
+                    flex-direction: column;
+                    align-items: stretch;
+                    gap: 0.6em;
+                    max-width: 95%;
+                    padding: 0.6em;
+                }
+
+                .controls-section {
+                    flex-direction: column;
+                    align-items: stretch;
+                    gap: 0.4em;
+                }
+
+                .divider {
+                    display: none;
+                }
+
+                button {
+                    width: 100%;
+                    font-size: 0.95em;
+                    padding: 0.6em;
+                }
+
+                .btn-success,
+                .btn-danger {
+                    font-size: 1em;
+                }
+
+                input[type="number"] {
+                    font-size: 0.95em;
+                    padding: 0.5em;
+                    width: 100%;
+                }
+
+                label {
+                    font-size: 0.95em;
+                }
+
+                .trigger {
+                    font-size: 0.95em;
+                    padding: 0.5em 0.8em;
+                }
+
+                .counter button {
+                    width: 2.2em;
+                    height: 2.2em;
+                    font-size: 0.9em;
+                }
+
+                #list {
+                    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                    gap: 0.4em;
+                }
+
+                .item {
+                    padding: 0.5em;
+                }
+
+                .land-counter button {
+                    width: 2.2em;
+                    height: 2.2em;
+                    font-size: 0.9em;
+                }
+
+                .land-value {
+                    font-size: 1em;
+                }
+
+                .popup {
+                    font-size: 0.95em;
+                    padding: 0.5em 1em;
+                }
+            }
     </style>
 
 
