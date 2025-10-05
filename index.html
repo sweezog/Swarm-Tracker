@@ -1,281 +1,346 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <title>Swarm Tracker</title>
-  <style>
-    body { 
-      font-family: system-ui, sans-serif; 
-      padding: 1em; 
-      background: #f5f5f5; 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center;
-    }
-    h1 { text-align: center; }
+    <meta charset="UTF-8" />
+    <title>Swarm Tracker</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            padding: 1em;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-    button { 
-      margin-left: .5em;
-      padding: .4em .8em;
-      border: none;
-      border-radius: 6px;
-      background: #ddd;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    button:hover { background: #ccc; }
+        h1 {
+            text-align: center;
+        }
 
-    .btn-danger {
-      background: #e74c3c;
-      color: white;
-    }
-    .btn-danger:hover { background: #c0392b; }
+        button {
+            margin-left: .5em;
+            padding: 0.6em 1em;
+            border: none;
+            border-radius: 8px;
+            background: #ddd;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.2s;
+        }
 
-    .btn-success {
-      background: #27ae60;
-      color: white;
-    }
-    .btn-success:hover { background: #1e874b; }
+        button:hover {
+            background: #ccc;
+        }
 
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      gap: 1em;
-      background: #fff;
-      padding: 1em;
-      border-radius: 10px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
-      margin-bottom: 1em;
-      max-width: 950px;
-      width: 100%;
-    }
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
 
-    .controls-section {
-      display: flex;
-      align-items: center;
-      gap: 0.5em;
-      flex-wrap: wrap;
-    }
+        .btn-danger:hover {
+            background: #c0392b;
+        }
 
-    label { margin: 0 .5em; }
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
 
-    .divider {
-      width: 2px;
-      height: 40px;
-      background: #ccc;
-    }
+        .btn-success:hover {
+            background: #1e874b;
+        }
 
-    .trigger { 
-      display:flex; 
-      align-items:center; 
-      justify-content:space-between;
-      background:#fff; 
-      padding:.5em 1em; 
-      margin:.3em 0; 
-      border-radius:8px;
-      box-shadow:0 1px 2px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 500px;
-    }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 0.8em;
+            background: #fff;
+            padding: 0.8em;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+            margin-bottom: 1em;
+            max-width: 950px;
+            width: 100%;
+        }
 
-    .counter { display:flex; align-items:center; gap:.5em; }
-    .counter button { width:2em; }
+        .controls-section {
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+            flex-wrap: wrap;
+        }
 
-    .section-title {
-      text-align:center;
-      margin-top:1em;
-      margin-bottom:.5em;
-      font-weight:bold;
-    }
+        label {
+            margin: 0 .3em;
+        }
 
-    input[type="number"] {
-      width:5.3em;
-      text-align:center;
-      padding: .3em;
-      border-radius:6px;
-      border:1px solid #ccc;
-    }
+        .divider {
+            width: 2px;
+            height: 36px;
+            background: #ccc;
+        }
 
-    /* Grid layout for creatures */
-    #list {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-      gap: 0.5em;
-      width: 100%;
-      max-width: 500px;
-    }
+        .trigger {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff;
+            padding: .5em 1em;
+            margin: .3em 0;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
 
-    .item { 
-      background: #fff; 
-      padding: .5em; 
-      border-radius: 8px;
-      text-align: center;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.1); 
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
+        .counter {
+            display: flex;
+            align-items: center;
+            gap: .5em;
+        }
 
-    .item.scute strong {
-      color: #2ecc71;
-    }
+        .counter button {
+            width: 2.5em;
+            height: 2.5em;
+        }
 
-    .item button {
-      margin-top: .25em;
-      font-size: 0.9em;
-    }
+        .section-title {
+            text-align: center;
+            margin-top: 1em;
+            margin-bottom: .5em;
+            font-weight: bold;
+        }
 
-    .creature-stat {
-      font-size: 0.9em;
-      color: #444;
-    }
+        input[type="number"] {
+            width: 5.5em;
+            text-align: center;
+            padding: .5em;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+        }
 
-    .land-counter {
-      display: flex;
-      align-items: center;
-      gap: 0.3em;
-    }
-    .land-value {
-      font-weight: bold;
-      min-width: 2em;
-      text-align: center;
-    }
+        /* Grid layout for creatures */
+        #list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 0.6em;
+            width: 100%;
+            max-width: 500px;
+        }
 
-    .popup {
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(46, 204, 113, 0.95);
-      color: white;
-      padding: 0.7em 1.2em;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-      font-weight: bold;
-      opacity: 1;
-      transition: opacity 0.5s ease-out;
-      z-index: 1000;
-    }
-  </style>
+        .item {
+            background: #fff;
+            padding: .6em;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .item.scute strong {
+            color: #2ecc71;
+        }
+
+        .item button {
+            margin-top: .25em;
+            font-size: 0.95em;
+        }
+
+        .creature-stat {
+            font-size: 1em;
+            color: #444;
+        }
+
+        .land-counter {
+            display: flex;
+            align-items: center;
+            gap: 0.3em;
+        }
+
+        .land-value {
+            font-weight: bold;
+            min-width: 2em;
+            text-align: center;
+            font-size: 1.1em;
+        }
+
+        /* Popup styling */
+        .popup {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(46, 204, 113, 0.95);
+            color: white;
+            padding: 0.7em 1.2em;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            font-weight: bold;
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
+            z-index: 1000;
+        }
+
+        /* 🌐 Mobile Responsiveness */
+        @media (max-width: 700px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.8em;
+            }
+
+            .controls-section {
+                justify-content: space-between;
+            }
+
+            .divider {
+                display: none;
+            }
+
+            button,
+            input[type="number"] {
+                width: 100%;
+                font-size: 1.1em;
+            }
+
+            label {
+                font-size: 1.1em;
+            }
+
+            .land-counter button {
+                width: 3em;
+                height: 3em;
+            }
+        }
+    </style>
+
+
+
+
 </head>
+
 <body>
-  <h1>Swarm Tracker</h1>
+    <h1>Swarm Tracker</h1>
 
-  <div class="controls">
-    <div class="controls-section">
-      <button class="btn-success" onclick="handleLandfall()">Landfall</button>
+    <div class="controls">
+        <div class="controls-section">
+            <button class="btn-success" onclick="handleLandfall()">Landfall</button>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="controls-section">
+            <span><strong>Lands:</strong></span>
+            <div class="land-counter">
+                <button onclick="changeLands(-1)">&#8595;</button>
+                <span id="landCount" class="land-value"></span>
+                <button onclick="changeLands(1)">&#8593;</button>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="controls-section">
+            <label><input type="radio" name="type" value="Scute" checked> Scute</label>
+            <label><input type="radio" name="type" value="Insect"> Insect</label>
+            <button onclick="addSpecificAmount()">Add Specific Amount</button>
+            <input type="number" id="bulkAddCount" value="1">
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="controls-section">
+            <button class="btn-danger" onclick="removeAll()">Remove All</button>
+            <div class="divider"></div>
+            <button class="btn-danger" onclick="resetAll()">Reset</button>
+        </div>
     </div>
 
-    <div class="divider"></div>
+    <div class="section-title">Triggers</div>
+    <div id="triggers"></div>
 
-    <div class="controls-section">
-      <span><strong>Lands:</strong></span>
-      <div class="land-counter">
-        <button onclick="changeLands(-1)">&#8595;</button>
-        <span id="landCount" class="land-value"></span>
-        <button onclick="changeLands(1)">&#8593;</button>
-      </div>
-    </div>
+    <div class="section-title">Creatures</div>
+    <div id="list"></div>
 
-    <div class="divider"></div>
+    <script>
+        let values = JSON.parse(localStorage.getItem('values')) || {};
+        let lands = parseInt(localStorage.getItem('lands') || '3');
 
-    <div class="controls-section">
-      <label><input type="radio" name="type" value="Scute" checked> Scute</label>
-      <label><input type="radio" name="type" value="Insect"> Insect</label>
-      <button onclick="addSpecificAmount()">Add Specific Amount</button>
-      <input type="number" id="bulkAddCount" value="1">
-    </div>
+        function updateLandsDisplay() {
+            document.getElementById('landCount').textContent = lands;
+        }
 
-    <div class="divider"></div>
+        function changeLands(delta) {
+            lands = Math.max(0, lands + delta);
+            localStorage.setItem('lands', lands);
+            updateLandsDisplay();
+        }
 
-    <div class="controls-section">
-      <button class="btn-danger" onclick="removeAll()">Remove All</button>
-      <div class="divider"></div>
-      <button class="btn-danger" onclick="resetAll()">Reset</button>
-    </div>
-  </div>
+        function normalizeTriggers(stored) {
+            const defaults = {
+                "Archangel of Thune": 0,
+                "Tribute to the World Tree": 0,
+                "Case of the Uneaten Feast": 0
+            };
+            const merged = Object.assign({}, defaults, stored || {});
+            const normalized = {};
+            for (const [name, val] of Object.entries(merged)) {
+                normalized[name] = (val && typeof val === 'object') ? (val.count || 0) :
+                    (typeof val === 'number' ? val : 0);
+            }
+            return normalized;
+        }
 
-  <div class="section-title">Triggers</div>
-  <div id="triggers"></div>
+        let triggers = normalizeTriggers(JSON.parse(localStorage.getItem('triggers')));
 
-  <div class="section-title">Creatures</div>
-  <div id="list"></div>
+        function save() {
+            localStorage.setItem('values', JSON.stringify(values));
+            localStorage.setItem('triggers', JSON.stringify(triggers));
+            localStorage.setItem('lands', lands);
+        }
 
-  <script>
-    let values = JSON.parse(localStorage.getItem('values')) || {};
-    let lands = parseInt(localStorage.getItem('lands') || '3');
+        function render() {
+            const list = document.getElementById('list');
+            list.innerHTML = '';
 
-    function updateLandsDisplay() {
-      document.getElementById('landCount').textContent = lands;
-    }
+            const entries = Object.entries(values);
 
-    function changeLands(delta) {
-      lands = Math.max(0, lands + delta);
-      localStorage.setItem('lands', lands);
-      updateLandsDisplay();
-    }
+            const insects = entries.filter(([k]) => k.startsWith("Insect")).reverse();
+            const scutes = entries.filter(([k]) => k.startsWith("Scute")).reverse();
 
-    function normalizeTriggers(stored) {
-      const defaults = {
-        "Archangel of Thune": 0,
-        "Tribute to the World Tree": 0,
-        "Case of the Uneaten Feast": 0
-      };
-      const merged = Object.assign({}, defaults, stored || {});
-      const normalized = {};
-      for (const [name, val] of Object.entries(merged)) {
-        normalized[name] = (val && typeof val === 'object') ? (val.count || 0) :
-                           (typeof val === 'number' ? val : 0);
-      }
-      return normalized;
-    }
+            const sorted = [...insects, ...scutes];
 
-    let triggers = normalizeTriggers(JSON.parse(localStorage.getItem('triggers')));
+            sorted.forEach(([k, v]) => {
+                const div = document.createElement('div');
+                div.className = 'item';
+                if (k.startsWith("Scute")) div.classList.add("scute");
 
-    function save() {
-      localStorage.setItem('values', JSON.stringify(values));
-      localStorage.setItem('triggers', JSON.stringify(triggers));
-      localStorage.setItem('lands', lands);
-    }
-
-function render() {
-  const list = document.getElementById('list');
-  list.innerHTML = '';
-
-  const entries = Object.entries(values);
-
-  const insects = entries.filter(([k]) => k.startsWith("Insect")).reverse();
-  const scutes = entries.filter(([k]) => k.startsWith("Scute")).reverse();
-
-  const sorted = [...insects, ...scutes];
-
-  sorted.forEach(([k, v]) => {
-    const div = document.createElement('div');
-    div.className = 'item';
-    if (k.startsWith("Scute")) div.classList.add("scute");
-
-    div.innerHTML = `
+                div.innerHTML = `
       <strong>${k}</strong>
       <span class="creature-stat">${v.power}/${v.toughness}</span>
       <button onclick="removeKey('${k}')">🗑️</button>
     `;
-    list.appendChild(div);
-  });
+                list.appendChild(div);
+            });
 
-  renderTriggers();
-  updateLandsDisplay();
-}
+            renderTriggers();
+            updateLandsDisplay();
+        }
 
-    function renderTriggers() {
-      const wrap = document.getElementById('triggers');
-      wrap.innerHTML = '';
-      Object.entries(triggers).forEach(([name, count]) => {
-        const div = document.createElement('div');
-        div.className = 'trigger';
-        div.innerHTML = `
+        function renderTriggers() {
+            const wrap = document.getElementById('triggers');
+            wrap.innerHTML = '';
+            Object.entries(triggers).forEach(([name, count]) => {
+                const div = document.createElement('div');
+                div.className = 'trigger';
+                div.innerHTML = `
           <span>${name}</span>
           <div class="counter">
             <button onclick="changeCount('${name}', -1)">&#8595;</button>
@@ -283,119 +348,120 @@ function render() {
             <button onclick="changeCount('${name}', 1)">&#8593;</button>
           </div>
         `;
-        wrap.appendChild(div);
-      });
-    }
-
-    function changeCount(name, delta) {
-      triggers[name] = Math.max(0, (triggers[name] || 0) + delta);
-      save();
-      renderTriggers();
-    }
-
-    function getNextName(base) {
-      const existing = Object.keys(values).filter(k => k.startsWith(base)).length;
-      return `${base} ${existing + 1}`;
-    }
-
-    function createCreature(type) {
-      const tribute = triggers["Tribute to the World Tree"] || 0;
-      const stat = 1 + tribute;
-      const key = getNextName(type);
-      values[key] = { power: stat, toughness: stat };
-    }
-
-    function buffAllCreatures(multiplier) {
-      for (const key in values) {
-        values[key].power += multiplier;
-        values[key].toughness += multiplier;
-      }
-    }
-
-    function showPopup(message) {
-      const popup = document.createElement('div');
-      popup.className = 'popup';
-      popup.textContent = message;
-      document.body.appendChild(popup);
-      setTimeout(() => {
-        popup.style.opacity = 0;
-        setTimeout(() => popup.remove(), 500);
-      }, 2000);
-    }
-
-    function handleLandfall() {
-      changeLands(1);
-
-      const scuteKeys = Object.keys(values).filter(k => k.startsWith("Scute"));
-      const scuteCount = scuteKeys.length;
-      if (scuteCount === 0) return;
-
-      const archangelVal = triggers["Archangel of Thune"] || 0;
-      const caseVal = triggers["Case of the Uneaten Feast"] || 0;
-      let created = 0;
-
-      const totalToCreate = lands < 6 ? scuteCount : scuteCount; // same number, but type differs
-      const typeToCreate = lands < 6 ? "Insect" : "Scute";
-
-      for (let i = 0; i < totalToCreate; i++) {
-        createCreature(typeToCreate);
-        created++;
-        if (archangelVal > 0 && caseVal > 0) {
-          buffAllCreatures(caseVal * archangelVal);
+                wrap.appendChild(div);
+            });
         }
-      }
 
-      if (caseVal > 0 && created > 0) {
-        const totalLife = created * caseVal;
-        showPopup(`You gain ${totalLife} life`);
-      }
+        function changeCount(name, delta) {
+            triggers[name] = Math.max(0, (triggers[name] || 0) + delta);
+            save();
+            renderTriggers();
+        }
 
-      save();
-      render();
-    }
+        function getNextName(base) {
+            const existing = Object.keys(values).filter(k => k.startsWith(base)).length;
+            return `${base} ${existing + 1}`;
+        }
 
-    function removeKey(key) {
-      delete values[key];
-      save();
-      render();
-    }
+        function createCreature(type) {
+            const tribute = triggers["Tribute to the World Tree"] || 0;
+            const stat = 1 + tribute;
+            const key = getNextName(type);
+            values[key] = { power: stat, toughness: stat };
+        }
 
-    function removeAll() {
-      if (confirm("Remove all existing creatures?")) {
-        values = {};
+        function buffAllCreatures(multiplier) {
+            for (const key in values) {
+                values[key].power += multiplier;
+                values[key].toughness += multiplier;
+            }
+        }
+
+        function showPopup(message) {
+            const popup = document.createElement('div');
+            popup.className = 'popup';
+            popup.textContent = message;
+            document.body.appendChild(popup);
+            setTimeout(() => {
+                popup.style.opacity = 0;
+                setTimeout(() => popup.remove(), 500);
+            }, 2000);
+        }
+
+        function handleLandfall() {
+            changeLands(1);
+
+            const scuteKeys = Object.keys(values).filter(k => k.startsWith("Scute"));
+            const scuteCount = scuteKeys.length;
+            if (scuteCount === 0) return;
+
+            const archangelVal = triggers["Archangel of Thune"] || 0;
+            const caseVal = triggers["Case of the Uneaten Feast"] || 0;
+            let created = 0;
+
+            const totalToCreate = lands < 6 ? scuteCount : scuteCount; // same number, but type differs
+            const typeToCreate = lands < 6 ? "Insect" : "Scute";
+
+            for (let i = 0; i < totalToCreate; i++) {
+                createCreature(typeToCreate);
+                created++;
+                if (archangelVal > 0 && caseVal > 0) {
+                    buffAllCreatures(caseVal * archangelVal);
+                }
+            }
+
+            if (caseVal > 0 && created > 0) {
+                const totalLife = created * caseVal;
+                showPopup(`You gain ${totalLife} life`);
+            }
+
+            save();
+            render();
+        }
+
+        function removeKey(key) {
+            delete values[key];
+            save();
+            render();
+        }
+
+        function removeAll() {
+            if (confirm("Remove all existing creatures?")) {
+                values = {};
+                save();
+                render();
+            }
+        }
+
+        function resetAll() {
+            if (confirm("Reset everything? This will clear creatures and triggers, and reset lands to 3.")) {
+                values = {};
+
+                // Reset triggers
+                for (const key in triggers) {
+                    triggers[key] = 0;
+                }
+
+                // Reset lands
+                lands = 3;
+
+                save();
+                render();
+            }
+        }
+
+        function addSpecificAmount() {
+            const amount = parseInt(document.getElementById('bulkAddCount').value, 10);
+            if (isNaN(amount) || amount <= 0) return;
+            const type = document.querySelector('input[name="type"]:checked').value;
+            for (let i = 0; i < amount; i++) createCreature(type);
+            save();
+            render();
+        }
+
         save();
         render();
-      }
-    }
-
-    function resetAll() {
-      if (confirm("Reset everything? This will clear creatures and triggers, and reset lands to 3.")) {
-      values = {};
-
-      // Reset triggers
-      for (const key in triggers) {
-        triggers[key] = 0;
-      }
-
-      // Reset lands
-      lands = 3;
-
-      save();
-      render();
-      }
-    }
-
-    function addSpecificAmount() {
-      const amount = parseInt(document.getElementById('bulkAddCount').value, 10);
-      if (isNaN(amount) || amount <= 0) return;
-      const type = document.querySelector('input[name="type"]:checked').value;
-      for (let i = 0; i < amount; i++) createCreature(type);
-      save();
-      render();
-    }
-
-    save();
-    render();
-  </script>
+    </script>
 </body>
+
 </html>
