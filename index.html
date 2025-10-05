@@ -82,6 +82,55 @@
                 flex-wrap: wrap;
             }
 
+            #creatureSummary {
+                transition: opacity 0.25s ease;
+                font-size: 0.95em;
+                text-align: center;
+                margin-top: -0.4em;
+                margin-bottom: 0.8em;
+                line-height: 1.2em;
+            }
+
+            #creatureSummary:empty {
+                opacity: 0;
+                height: 0;
+                margin: 0;
+                overflow: hidden;
+            }
+
+            .add-section {
+                display: flex;
+                justify-content: center;
+                width: 100%;
+            }
+
+            .add-controls {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: center;
+                gap: 0.4em;
+                width: 100%;
+            }
+
+            .add-controls input[type="number"] {
+                width: 4em;
+                /* 🟢 Shrunk to fit inside the menu nicely */
+                text-align: center;
+                padding: 0.4em;
+                font-size: 1em;
+                border-radius: 6px;
+                border: 1px solid #ccc;
+            }
+
+            .add-controls button {
+                flex: 1 1 45%;
+                min-width: 130px;
+                text-align: center;
+                padding: 0.6em 0.8em;
+            }
+
+
             label {
                 margin: 0 .3em;
             }
@@ -130,6 +179,36 @@
                 border-radius: 8px;
                 border: 1px solid #ccc;
                 font-size: 1em;
+            }
+
+            /* 🧭 Center the Lands block cleanly */
+            .land-section {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 0.6em;
+                width: 100%;
+                text-align: center;
+            }
+
+            .land-label {
+                font-weight: bold;
+            }
+
+            .land-counter {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.3em;
+            }
+
+            .land-counter button {
+                width: 2.4em;
+                height: 2.4em;
+                font-size: 1em;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
             /* Grid layout for creatures */
@@ -295,43 +374,58 @@
     <h1>Swarm Tracker</h1>
 
     <div class="controls">
+
+        <!-- Landfall button -->
         <div class="controls-section">
             <button class="btn-success" onclick="handleLandfall()">Landfall</button>
         </div>
 
         <div class="divider"></div>
 
-        <div class="controls-section">
-            <span><strong>Lands:</strong></span>
+        <!-- Lands counter -->
+        <div class="controls-section land-section">
+            <div class="land-label"><strong>Lands</strong></div>
             <div class="land-counter">
                 <button onclick="changeLands(-1)">&#8595;</button>
-                <span id="landCount" class="land-value"></span>
+                <span id="landCount" class="land-value">3</span>
                 <button onclick="changeLands(1)">&#8593;</button>
             </div>
         </div>
 
-        <div class="controls-section">
-            <label><input type="radio" name="type" value="Scute" checked onchange="updateAddButton()"> Scute</label>
-            <label><input type="radio" name="type" value="Insect" onchange="updateAddButton()"> Insect</label>
-            <button id="addButton" onclick="addSpecificAmount()">Add Scutes</button>
-            <input type="number" id="bulkAddCount" value="1">
+        <div class="divider"></div>
+
+        <!-- Add Scutes / Insects -->
+        <div class="controls-section add-section">
+            <div class="add-controls">
+                <button class="btn-success" onclick="promptAdd('Scute')">Add Scutes</button>
+                <button class="btn-success" onclick="promptAdd('Insect')">Add Insects</button>
+            </div>
         </div>
 
+
+        <div class="divider"></div>
+
+        <!-- Remove / Reset -->
         <div class="controls-section">
-            <button class="btn-danger" onclick="removeAll()">Remove All Creatures</button>
-            <button class="btn-danger" onclick="resetAll()">Reset All</button>
+            <button class="btn-danger" onclick="removeAll()">Remove All</button>
+            <div class="divider"></div>
+            <button class="btn-danger" onclick="resetAll()">Reset</button>
         </div>
     </div>
+
 
     <div class="section-title">Triggers</div>
     <div id="triggers"></div>
 
     <div class="section-title">Creatures</div>
+    <div id="creatureSummary"></div>
     <div id="list"></div>
 
     <script>
         let values = JSON.parse(localStorage.getItem('values')) || {};
         let lands = parseInt(localStorage.getItem('lands') || '3');
+        let triggers = normalizeTriggers(JSON.parse(localStorage.getItem('triggers')));
+
 
         function updateLandsDisplay() {
             document.getElementById('landCount').textContent = lands;
@@ -346,8 +440,8 @@
         function normalizeTriggers(stored) {
             const defaults = {
                 "Archangel of Thune": 0,
-                "Tribute to the World Tree": 0,
-                "Case of the Uneaten Feast": 0
+                "Case of the Uneaten Feast": 0,
+                "Tribute to the World Tree": 0
             };
             const merged = Object.assign({}, defaults, stored || {});
             const normalized = {};
@@ -357,8 +451,6 @@
             }
             return normalized;
         }
-
-        let triggers = normalizeTriggers(JSON.parse(localStorage.getItem('triggers')));
 
         function save() {
             localStorage.setItem('values', JSON.stringify(values));
@@ -370,29 +462,50 @@
             const list = document.getElementById('list');
             list.innerHTML = '';
 
-            const entries = Object.entries(values);
+            // Separate creatures by type
+            function extractNumber(name) {
+                const match = name.match(/\d+/);
+                return match ? parseInt(match[0], 10) : 0;
+            }
 
-            const insects = entries.filter(([k]) => k.startsWith("Insect")).reverse();
-            const scutes = entries.filter(([k]) => k.startsWith("Scute")).reverse();
+            const insects = Object.entries(values)
+                .filter(([k]) => k.startsWith('Insect'))
+                .sort((a, b) => extractNumber(b[0]) - extractNumber(a[0])); // newest first
 
+            const scutes = Object.entries(values)
+                .filter(([k]) => k.startsWith('Scute'))
+                .sort((a, b) => extractNumber(a[0]) - extractNumber(b[0])); // newest first
+
+            // Merge insects first, then scutes
             const sorted = [...insects, ...scutes];
 
+            // Render them
             sorted.forEach(([k, v]) => {
                 const div = document.createElement('div');
                 div.className = 'item';
-                if (k.startsWith("Scute")) div.classList.add("scute");
+                const color = k.startsWith('Scute') ? 'green' : 'black';
+                let displayValue;
+                if (typeof v === 'object' && v !== null) {
+                    // Handle structured creature data
+                    const p = v.power ?? 1;
+                    const t = v.toughness ?? 1;
+                    displayValue = `${p}/${t}`;
+                } else {
+                    // Handle old numeric values (for backward compatibility)
+                    displayValue = v;
+                }
 
                 div.innerHTML = `
-      <strong>${k}</strong>
-      <span class="creature-stat">${v.power}/${v.toughness}</span>
-      <button onclick="removeKey('${k}')">🗑️</button>
-    `;
+  <span style="color:${color};"><strong>${k}</strong>: <br>${displayValue}</span>
+  <span><button onclick="removeKey('${k}')">❌</button></span>`;
                 list.appendChild(div);
             });
 
             renderTriggers();
             updateLandsDisplay();
+            updateCreatureSummary();
         }
+
 
         function renderTriggers() {
             const wrap = document.getElementById('triggers');
@@ -493,6 +606,16 @@
             }
         }
 
+        function promptAdd(type) {
+            let amount = prompt(`How many ${type === 'Scute' ? 'Scutes' : 'Insect Tokens'} would you like to add?`, "1");
+            if (amount === null) return; // user canceled
+            amount = parseInt(amount, 10);
+            if (isNaN(amount) || amount <= 0) return;
+            for (let i = 0; i < amount; i++) createCreature(type);
+            save();
+            render();
+        }
+
         function resetAll() {
             if (confirm("Reset everything? This will clear creatures and triggers, and reset lands to 3.")) {
                 values = {};
@@ -510,28 +633,64 @@
             }
         }
 
-        function addSpecificAmount() {
-            const amount = parseInt(document.getElementById('bulkAddCount').value, 10);
-            if (isNaN(amount) || amount <= 0) return;
-            const type = document.querySelector('input[name="type"]:checked').value;
-            for (let i = 0; i < amount; i++) createCreature(type);
-            save();
-            render();
-        }
 
         function updateAddButton() {
             const type = document.querySelector('input[name="type"]:checked').value;
             const addBtn = document.getElementById('addButton');
             if (type === "Insect") {
-                addBtn.textContent = "Add Insect Tokens";
+                addBtn.textContent = "Add Insects";
             } else {
                 addBtn.textContent = "Add Scutes";
             }
         }
 
-        updateAddButton();
+
+
+
+        function updateCreatureSummary() {
+            const entries = Object.entries(values);
+
+            const totalScutes = entries.filter(([k]) => k.startsWith('Scute')).length;
+            const totalInsects = entries.filter(([k]) => k.startsWith('Insect')).length;
+
+            // Sum power/toughness
+            let totalPower = 0;
+            let totalToughness = 0;
+            entries.forEach(([_, v]) => {
+                if (typeof v === 'object' && v !== null) {
+                    totalPower += v.power ?? 0;
+                    totalToughness += v.toughness ?? 0;
+                } else if (typeof v === 'number') {
+                    totalPower += v;
+                    totalToughness += v;
+                }
+            });
+
+            const summary = document.getElementById('creatureSummary');
+
+            // 🧭 Hide summary entirely if there are no creatures
+            if (totalScutes + totalInsects === 0) {
+                summary.innerHTML = '';
+                return;
+            }
+
+            // 🪲🐢 Otherwise show counts and totals
+            summary.innerHTML = `
+    <div>
+      <span style="color:green;">${totalScutes.toLocaleString()}</span>
+      <span style="color:black;">${totalInsects.toLocaleString()}</span>
+    </div>
+    <div style="margin-top:0.4em;">
+      ${totalPower.toLocaleString()}/${totalToughness.toLocaleString()}
+    </div>
+  `;
+        }
+
+
+
         save();
         render();
+        updateAddButton();
     </script>
 </body>
 
