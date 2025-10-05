@@ -56,13 +56,13 @@
             flex-wrap: wrap;
             justify-content: center;
             align-items: center;
-            gap: 0.8em;
+            gap: 0.6em;
             background: #fff;
             padding: 0.8em;
             border-radius: 12px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
             margin-bottom: 1em;
-            max-width: 950px;
+            max-width: 600px;
             width: 100%;
         }
 
@@ -248,9 +248,9 @@
         <div class="divider"></div>
 
         <div class="controls-section">
-            <label><input type="radio" name="type" value="Scute" checked> Scute</label>
-            <label><input type="radio" name="type" value="Insect"> Insect</label>
-            <button onclick="addSpecificAmount()">Add Specific Amount</button>
+            <label><input type="radio" name="type" value="Scute" checked onchange="updateAddButton()"> Scute</label>
+            <label><input type="radio" name="type" value="Insect" onchange="updateAddButton()"> Insect</label>
+            <button id="addButton" onclick="addSpecificAmount()">Add Scutes</button>
             <input type="number" id="bulkAddCount" value="1">
         </div>
 
@@ -457,6 +457,17 @@
             render();
         }
 
+        function updateAddButton() {
+            const type = document.querySelector('input[name="type"]:checked').value;
+            const addBtn = document.getElementById('addButton');
+            if (type === "Insect") {
+                addBtn.textContent = "Add Insect Tokens";
+            } else {
+                addBtn.textContent = "Add Scutes";
+            }
+        }
+
+        updateAddButton();
         save();
         render();
     </script>
