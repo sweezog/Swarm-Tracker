@@ -188,35 +188,96 @@
             z-index: 1000;
         }
 
-        /* 🌐 Mobile Responsiveness */
+        /* 🌐 Mobile Zoomed-In Layout */
         @media (max-width: 700px) {
+
+            html,
+            body {
+                font-size: 20px;
+                /* Scale everything up globally */
+            }
+
+            h1 {
+                font-size: 1.6em;
+            }
+
             .controls {
                 flex-direction: column;
                 align-items: stretch;
-                gap: 0.8em;
+                gap: 1em;
+                max-width: 90%;
+                /* narrower for thumb reach */
+                padding: 1em;
             }
 
             .controls-section {
-                justify-content: space-between;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.6em;
             }
 
             .divider {
                 display: none;
             }
 
-            button,
-            input[type="number"] {
+            button {
                 width: 100%;
                 font-size: 1.1em;
+                padding: 0.9em;
+            }
+
+            .btn-success,
+            .btn-danger {
+                font-size: 1.2em;
+            }
+
+            input[type="number"] {
+                font-size: 1.1em;
+                padding: 0.6em;
+                width: 100%;
             }
 
             label {
                 font-size: 1.1em;
             }
 
+            .trigger {
+                font-size: 1.1em;
+                padding: 0.8em 1em;
+            }
+
+            .counter button {
+                width: 2.8em;
+                height: 2.8em;
+                font-size: 1.1em;
+            }
+
+            .creature-stat {
+                font-size: 1.1em;
+            }
+
+            #list {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 0.7em;
+            }
+
+            .item {
+                padding: 0.8em;
+            }
+
             .land-counter button {
                 width: 3em;
                 height: 3em;
+                font-size: 1.1em;
+            }
+
+            .land-value {
+                font-size: 1.2em;
+            }
+
+            .popup {
+                font-size: 1.1em;
+                padding: 0.8em 1.4em;
             }
         }
     </style>
