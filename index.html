@@ -130,6 +130,28 @@
                 padding: 0.6em 0.8em;
             }
 
+            .buff-section {
+                display: flex;
+                justify-content: center;
+                width: 100%;
+            }
+
+            .buff-controls {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: center;
+                gap: 0.6em;
+                width: 100%;
+            }
+
+            .buff-controls button {
+                flex: 1 1 45%;
+                min-width: 130px;
+                text-align: center;
+                padding: 0.6em 0.8em;
+            }
+
 
             label {
                 margin: 0 .3em;
@@ -399,8 +421,11 @@
         </div>
 
         <!-- Remove / Reset -->
-        <div class="controls-section">
-            <button class="btn-success" onclick="addCounters()">+1/+1 to all</button>
+        <div class="controls-section buff-section">
+            <div class="buff-controls">
+                <button class="btn-success" onclick="addCounters()">+1/+1 to all</button>
+                <button class="btn-danger" onclick="removeCounters()">-1/-1 to all</button>
+            </div>
             <button class="btn-danger" onclick="removeAll()">Remove All</button>
             <button class="btn-danger" onclick="resetAll()">Reset</button>
         </div>
@@ -656,6 +681,32 @@
             }
         }
 
+        function removeCounters() {
+            if (!confirm("Are you sure you want to remove 1/1 from every creature?")) return;
+
+            const toDelete = [];
+
+            Object.keys(values).forEach(k => {
+                const creature = values[k];
+                if (typeof creature === "object" && creature !== null) {
+                    creature.power = (creature.power ?? 1) - 1;
+                    creature.toughness = (creature.toughness ?? 1) - 1;
+
+                    // mark for deletion if toughness ≤ 0
+                    if (creature.toughness <= 0) {
+                        toDelete.push(k);
+                    }
+                }
+            });
+
+            // remove any that died
+            toDelete.forEach(k => delete values[k]);
+
+            if (toDelete.length > 0 || Object.keys(values).length > 0) {
+                save();
+                render();
+            }
+        }
 
         function updateCreatureSummary() {
             const entries = Object.entries(values);
